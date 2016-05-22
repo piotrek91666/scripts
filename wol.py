@@ -27,7 +27,20 @@ args = parser.parse_args()
 print("Sending magic packet to {}:{} with {}... ". format(args.bcast, args.port, args.bcast), end='')
 
 macaddress = args.mac
-macaddress = macaddress.replace(macaddress[2], '')
+
+
+if len(macaddress) == 17:
+    macaddress = macaddress.replace(macaddress[2], '')
+
+elif len(macaddress) == 12:
+    pass
+
+else:
+    try:
+        raise MacValueError(macaddress)
+    except:
+        print('\nInvalid hardware address.')
+        exit(1)
 
 data = b'FFFFFFFFFFFF' + (macaddress * 20).encode()
 send_data = b''

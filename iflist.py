@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+# iflist.py - Utility to lis all network interfaces.
+# Version: 0.1
+# (c) 2016 Piotr Grzeszczak
+# http://www.grzeszczak.pw
+# License: GPLv3
+
 import netifaces
 
 for inet_face in netifaces.interfaces():

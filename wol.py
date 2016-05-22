@@ -1,4 +1,11 @@
 #!/usr/bin/env python
+
+# wol.py - Utility to awake machines using the Wake on LAN.
+# Version: 0.1
+# (c) 2016 Piotr Grzeszczak
+# http://www.grzeszczak.pw
+# License: GPLv3
+
 import socket
 import struct
 import netifaces

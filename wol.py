@@ -37,7 +37,7 @@ elif len(macaddress) == 12:
 
 else:
     try:
-        raise MacValueError(macaddress)
+        raise ValueError(macaddress)
     except:
         print('\nInvalid hardware address.')
         exit(1)

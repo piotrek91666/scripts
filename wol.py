@@ -31,8 +31,6 @@ parser.add_argument("-b", "--bcast",
 
 args = parser.parse_args()
 
-print("Sending magic packet to {}:{} with {}... ". format(args.bcast, args.port, args.bcast), end='')
-
 macaddress = args.mac
 
 
@@ -48,6 +46,8 @@ else:
     except:
         print('\nInvalid hardware address.')
         exit(1)
+
+print("Sending magic packet to {}:{} with {}... ". format(macaddress, args.port, args.bcast), end='')
 
 data = b'FFFFFFFFFFFF' + (macaddress * 20).encode()
 send_data = b''

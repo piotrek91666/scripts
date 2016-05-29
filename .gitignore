@@ -1,4 +1,4 @@
 .*
-.pyproj
+*.pyproj
 .vs
 !.gitignore

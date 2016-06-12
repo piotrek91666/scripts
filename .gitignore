@@ -2,4 +2,5 @@
 *.pyproj
 *.sln
 .vs
+*/__pycache__
 !.gitignore

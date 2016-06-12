@@ -6,16 +6,26 @@
 # http://www.grzeszczak.pw
 # License: GPLv3
 
-import paramiko
-import socket
 
 class UCI:
-    def __init__(self, ow_host):
+    def __init__(self, ow_host, paramiko_instance=None):
+        self.paramiko_instance = paramiko_instance
+
+        if not self.paramiko_instance:
+            self.__connect(ow_host)
+        else:
+            self.ssh_client = paramiko_instance
+
+    def __connect(self, ow_host):
+        import paramiko
+        import socket
+
         self.ssh_client = paramiko.SSHClient()
         self.ssh_client.load_system_host_keys()
         self.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
         try:
+            print('Connecting to: {}'.format(ow_host))
             self.ssh_client.connect(ow_host, 22, 'root', look_for_keys=True)
         except (paramiko.SSHException, socket.gaierror) as e:
             print("Connection error: {}".format(e))
@@ -74,9 +84,6 @@ class UCI:
     def reorder(self, cmd_string):
         self._send_cmd('uci reorder {}'.format(cmd_string))
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.ssh_client.close()
-
-t = UCI('homegate')
-t.show('dhcpp')
-
+    def __exit__(self):
+        if not self.paramiko_instance:
+            self.ssh_client.close()

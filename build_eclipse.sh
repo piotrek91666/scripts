@@ -48,10 +48,13 @@ cd eclipse
 
 #AVR
 ./eclipse -application org.eclipse.equinox.p2.director -nosplash -r "${avr_p2repo}" \
-    -installIU org.eclipse.cdt.feature.group
+    -installIU de.innot.avreclipse.feature.group
 
 # tm-terminal
 ./eclipse -application org.eclipse.equinox.p2.director -nosplash -r "${tmterminal_p2repo}" \
     -installIU org.eclipse.tm.terminal.feature.feature.group \
+
+# Disable GTK3
+sed -i 's/.*launcher\.appendVmargs.*/--launcher.GTK_version\n2\n&/' eclipse.ini
 
 cd ..

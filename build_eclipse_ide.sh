@@ -21,8 +21,8 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $SCRIPT_DIR
 
 #NOPE!
-mkdir -p ~/Develop/eclipse
-cd ~/Develop/eclipse
+mkdir -p ~/Projects/eclipse
+cd ~/Projects/eclipse
 
 if [ -d "downloads" ]; then
     rm -rf downloads

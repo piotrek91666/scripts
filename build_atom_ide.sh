@@ -17,6 +17,7 @@ apm install linter
 apm install linter-gcc
 apm install linter-flake8
 apm install linter-pep8
+apm install linter-shellcheck
 apm install language-ini
 apm install language-kconfig
 apm install autocomplete-python
@@ -25,3 +26,10 @@ apm install platformio-ide
 apm install platformio-ide-terminal
 apm install atom-sync
 apm install markdown-writer
+apm install minimap
+apm install minimap-find-and-replace
+apm install minimap-highlight-selected
+apm install minimap-git-diff
+apm install minimap-cursorline
+apm install highlight-selected
+apm install highlight-line

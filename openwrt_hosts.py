@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # openwrt_hosts.py - Utility to list host defined in your openwrt router.
 # Version: 0.1
@@ -9,6 +9,7 @@
 import paramiko
 import socket
 import argparse
+from subprocess import Popen, PIPE, STDOUT
 
 parser = argparse.ArgumentParser()
 parser.add_argument("host",
@@ -34,9 +35,9 @@ sftp = ssh_client.open_sftp()
 
 fileObject = None
 try:
-    fileObject = sftp.open(args.file,'r', -1)
+    fileObject = sftp.open(args.file, 'r', -1)
 except FileNotFoundError as e:
-    print("Error while opening remote file: {}\n". format(args.file), e, sep='')
+    print("Error while opening remote file: {}\n".format(args.file), e, sep='')
     exit(1)
 
 lines = []
@@ -49,7 +50,7 @@ sftp.close()
 ssh_client.close()
 
 opt_sem = False
-hosts = {}
+hosts = []
 tmp_dict = {}
 for line in lines:
     if line == 'config host':
@@ -59,17 +60,16 @@ for line in lines:
         tmp_dict[line.split()[1].strip("'")] = line.split()[2].strip("'")
 
     elif line.split()[0] != 'option' and opt_sem:
-        tmp_name = tmp_dict['name']
-        tmp_dict.pop('name')
-        hosts[tmp_name] = tmp_dict
+        hosts.append(tmp_dict)
         tmp_dict = {}
 
     else:
         opt_sem = False
 
 for host in hosts:
-    print("Hostname {0:16}".format(host), end='')
-    for host_opt in hosts[host]:
-        print("{}: {}\t".format(host_opt, hosts[host][host_opt]).expandtabs(10), end='')
-
-    print('')
+    ping_result = Popen(["/bin/ping", "-c1", host["name"]], stderr=STDOUT,
+        stdout=PIPE)
+    ping_state = ping_result.communicate()[0], ping_result.returncode
+    print("Host: {}\tIP: {}\tMAC: {}\t State: {}".format(
+        host["name"], host["ip"], host["mac"],
+        'DOWN' if ping_state[1] else 'UP').expandtabs(25))

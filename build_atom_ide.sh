@@ -26,6 +26,7 @@ apm install platformio-ide
 apm install platformio-ide-terminal
 apm install atom-sync
 apm install markdown-writer
+apm install markdown-preview-plus
 apm install minimap
 apm install minimap-find-and-replace
 apm install minimap-highlight-selected

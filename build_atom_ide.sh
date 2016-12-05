@@ -16,7 +16,6 @@ fi
 apm install linter
 apm install linter-gcc
 apm install linter-flake8
-apm install linter-pep8
 apm install linter-shellcheck
 apm install language-ini
 apm install language-kconfig
@@ -25,6 +24,7 @@ apm install autocomplete-clang
 apm install platformio-ide
 apm install platformio-ide-terminal
 apm install atom-sync
+apm install atom-jinja2
 apm install markdown-writer
 apm install markdown-preview-plus
 apm install minimap

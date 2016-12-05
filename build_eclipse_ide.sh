@@ -2,9 +2,9 @@
 
 # Builds: http://download.eclipse.org/eclipse/downloads/
 # Need: curl
-eclipse_ver=4.6
+eclipse_ver=4.6.1
 eclipse_rel="neon"
-eclipse_build="201606061100"
+eclipse_build="201609071200"
 eclipse_dlurl="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-${eclipse_ver}-${eclipse_build}/eclipse-platform-${eclipse_ver}-linux-gtk-x86_64.tar.gz&r=1"
 eclipse_dloutput="downloads/eclipse-platform-${eclipse_ver}-${eclipse_build}-linux-gtk-x86_64.tar.gz"
 
@@ -18,11 +18,11 @@ tmterminal_p2repo="http://download.eclipse.org/tm/terminal/marketplace"
 ### END OF CONFIG ###
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $SCRIPT_DIR
+cd $SCRIPT_DIR || exit
 
 #NOPE!
-mkdir -p ~/Projects/eclipse
-cd ~/Projects/eclipse
+mkdir -p ~/Projects/Tools/eclipse
+cd ~/Projects/Tools/eclipse || exit
 
 if [ -d "downloads" ]; then
     rm -rf downloads
@@ -37,7 +37,7 @@ curl -L -o "${eclipse_dloutput}" "${eclipse_dlurl}"
 
 tar xvf "${eclipse_dloutput}"
 
-cd eclipse
+cd eclipse || exit
 
 #CDT
 ./eclipse -application org.eclipse.equinox.p2.director -nosplash -r "${eclipse_p2repo}" \

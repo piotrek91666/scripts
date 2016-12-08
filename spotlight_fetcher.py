@@ -17,7 +17,7 @@ import signal
 
 from datetime import datetime
 
-dest = os.getenv('HOME') + "/Pictures/Wallpapers/Spotlight"
+dest = os.path.join(os.path.expanduser('~'), "Pictures","Wallpapers", "Spotlight")
 file_blacklist = []
 
 # Catch Ctrl + C signal
@@ -114,7 +114,7 @@ def worker():
     # TODO: Cleanup this part.
     with requests.Session() as s:
         for url in urls:
-            local_path = dest + "/" + url.split('/')[3] + '.jpg'
+            local_path = os.path.join(dest, url.split('/')[3] + '.jpg')
             if os.path.exists(local_path) is False and not local_path in file_blacklist:
                 md5sum = downloader(url, s, local_path)
 

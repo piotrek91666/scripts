@@ -1,49 +1,71 @@
 #!/bin/bash
 
 # Builds: http://download.eclipse.org/eclipse/downloads/
-# Need: curl
-eclipse_ver=4.6.2
-eclipse_rel="neon"
-eclipse_build="201611241400"
-eclipse_dlurl="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-${eclipse_ver}-${eclipse_build}/eclipse-platform-${eclipse_ver}-linux-gtk-x86_64.tar.gz&r=1"
-eclipse_dloutput="downloads/eclipse-platform-${eclipse_ver}-${eclipse_build}-linux-gtk-x86_64.tar.gz"
-
-cdt_ver=9.0
-
-cdt_p2repo="http://download.eclipse.org/tools/cdt/releases/${cdt_ver}"
-eclipse_p2repo="http://download.eclipse.org/releases/${eclipse_rel}/"
-avr_p2repo="http://avr-eclipse.sourceforge.net/updatesite"
-tmterminal_p2repo="http://download.eclipse.org/tm/terminal/marketplace"
+# Need: curl, tar, sed, unzip
+eclipse_letter="R"
+eclipse_ver="4.6.3"
+eclipse_build="201703010400"
+eclipse_platform="linux-gtk"
+eclipse_release="neon"
+eclipse_arch="x86_64"
+eclipse_dlurl="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/${eclipse_letter}-${eclipse_ver}-${eclipse_build}/eclipse-platform-${eclipse_ver}-${eclipse_platform}-${eclipse_arch}.tar.gz&r=1"
+eclipse_dloutput="eclipse-platform-${eclipse_ver}-${eclipse_build}-${eclipse_platform}-${eclipse_arch}.tar.gz"
+installation_path="$HOME/Apps/eclipse"
 
 ### END OF CONFIG ###
 
-mkdir -p ~/Tools/eclipse
-cd ~/Tools/eclipse || exit
+if [[ -d "$installation_path" ]]; then
+  echo -ne "Current installation exists in $installation_path.\nDo you want reinstall it? "
+  read -p "[y/n]" -n 1 -r; echo ""
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Bye!"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+  else
+    echo "Removing old installation..."
+    rm -rf "${installation_path:?}/"*
+  fi
+else
+  echo "Creating new $installation_path."
+  mkdir -p ~/Apps/eclipse
+fi
 
-echo "Downloading..."
-mkdir -p downloads
-curl -s -L -o "${eclipse_dloutput}" "${eclipse_dlurl}"
+echo "Downloading eclipse..."
+mkdir -p "${installation_path}/downloads"
+curl -L -o "${installation_path}/downloads/${eclipse_dloutput}" "${eclipse_dlurl}"
 
 echo "Extracting..."
-tar xf "${eclipse_dloutput}" -C .
-mv eclipse eclipse_dir || exit
-mv eclipse_dir/* . || exit
+tar --strip-components=1 -xf "${installation_path}/downloads/${eclipse_dloutput}" -C "${installation_path}/"
 
-echo "Install plugins..."
-#CDT
-./eclipse -application org.eclipse.equinox.p2.director -nosplash -r "${eclipse_p2repo}" \
-    -installIU org.eclipse.launchbar.core
+# Disable GTK2
+sed -i 's/.*launcher\.appendVmargs.*/--launcher.GTK_version\n3\n&/' "${installation_path}/eclipse.ini"
 
-./eclipse -application org.eclipse.equinox.p2.director -nosplash -r "${cdt_p2repo}" \
-    -installIU org.eclipse.cdt.feature.group
+# Install stuff
+echo "Installing..."
+${installation_path}/eclipse \
+-noSplash -purgeHistory -application org.eclipse.equinox.p2.director \
+-repository \
+"http://download.eclipse.org/releases/${eclipse_release}",\
+"http://avr-eclipse.sourceforge.net/updatesite",\
+"http://winterwell.com/software/updatesite",\
+"http://dadacoalition.org/yedit" \
+-installIUs \
+org.eclipse.epp.mpc.feature.group,\
+org.eclipse.cdt.feature.group,\
+org.eclipse.cdt.build.crossgcc.feature.group,\
+org.eclipse.cdt.autotools.feature.group,\
+org.eclipse.cdt.managedbuilder.llvm.feature.group,\
+org.eclipse.php.feature.group,\
+org.eclipse.php.composer.feature.group,\
+org.eclipse.dltk.sh.feature.group,\
+org.eclipse.tm.terminal.feature.feature.group,\
+org.eclipse.rse.feature.group,\
+org.eclipse.egit.feature.group,\
+org.eclipse.team.svn.feature.group,\
+de.innot.avreclipse.feature.group,\
+markdown.editor.feature.feature.group,\
+org.dadacoalition.yedit.feature.feature.group
 
-#AVR
-./eclipse -application org.eclipse.equinox.p2.director -nosplash -r "${avr_p2repo}" \
-    -installIU de.innot.avreclipse.feature.group
-
-# tm-terminal
-./eclipse -application org.eclipse.equinox.p2.director -nosplash -r "${tmterminal_p2repo}" \
-    -installIU org.eclipse.tm.terminal.feature.feature.group \
-
-# Disable GTK3
-sed -i 's/.*launcher\.appendVmargs.*/--launcher.GTK_version\n2\n&/' eclipse.ini
+# PyDev needs this trick
+echo "Installing... PyDev"
+curl -L -o "${installation_path}/downloads/PyDev.zip" "https://sourceforge.net/projects/pydev/files/latest/download?source=typ_redirect"
+unzip -q "${installation_path}/downloads/PyDev.zip" -d "${installation_path}/dropins/pydev/"

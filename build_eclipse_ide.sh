@@ -2,11 +2,11 @@
 
 # Builds: http://download.eclipse.org/eclipse/downloads/
 # Need: curl, tar, sed, unzip
-eclipse_letter="R"
-eclipse_ver="4.6.3"
-eclipse_build="201703010400"
+eclipse_letter="S"
+eclipse_ver="4.7RC2"
+eclipse_build="201705242000"
 eclipse_platform="linux-gtk"
-eclipse_release="neon"
+eclipse_release="oxygen"
 eclipse_arch="x86_64"
 eclipse_dlurl="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/${eclipse_letter}-${eclipse_ver}-${eclipse_build}/eclipse-platform-${eclipse_ver}-${eclipse_platform}-${eclipse_arch}.tar.gz&r=1"
 eclipse_dloutput="eclipse-platform-${eclipse_ver}-${eclipse_build}-${eclipse_platform}-${eclipse_arch}.tar.gz"
